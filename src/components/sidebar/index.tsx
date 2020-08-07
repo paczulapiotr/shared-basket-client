@@ -1,6 +1,8 @@
 import React, { useContext } from 'react'
 import { SharedBasketsContext, actions } from '../contexts/sharedBasketsContext'
 import { Button, List } from 'antd'
+import './style.scss'
+import {} from 'swr'
 interface Props {}
 
 const basketsForUpdate: SharedBasketModel[] = [
@@ -21,7 +23,7 @@ const SideBar = (props: Props) => {
     }
 
     return (
-        <div>
+        <div className="sidebar">
             <List
                 itemLayout="horizontal"
                 dataSource={baskets}
