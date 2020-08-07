@@ -1,4 +1,4 @@
-import { _reducer, actions } from "./sharedBasketsContext";
+import { _reducer, actions } from "../sharedBasketsContext";
 describe("SharedBasketsContext tests", () => {
   test("Should update new baskets list on update action", () => {
 

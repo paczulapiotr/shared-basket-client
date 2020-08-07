@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 import { SharedBasketsContext, actions } from '../contexts/sharedBasketsContext'
 import { Button, List } from 'antd'
-import './style.scss'
 interface Props {}
 
 const basketsForUpdate: SharedBasketModel[] = [
