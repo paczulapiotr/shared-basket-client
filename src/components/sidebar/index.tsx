@@ -1,22 +1,31 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { SharedBasketsContext, actions } from '../contexts/sharedBasketsContext'
 import { Button, List } from 'antd'
+// import useFetcher from 'src/utility/useFetcher'
+import useRequest from 'src/utility/useRequest'
 import './style.scss'
-import {} from 'swr'
+import Axios from 'axios'
 interface Props {}
 
-const basketsForUpdate: SharedBasketModel[] = [
-    { id: 'bsk_01', name: 'First basket' },
-    { id: 'bsk_02', name: 'Second basket' },
-]
+// const basketsForUpdate: SharedBasketModel[] = [
+//     { id: 'bsk_01', name: 'First basket' },
+//     { id: 'bsk_02', name: 'Second basket' },
+// ]
 
 const SideBar = (props: Props) => {
     const { baskets, dispatch } = useContext<SharedBasketContext>(
         SharedBasketsContext
     )
+    const [data, sendRequest] = useRequest<SharedBasketModel[]>()
+
+    useEffect(() => {
+        dispatch({ type: actions.UPDATE, payload: data.data })
+    }, [data])
 
     const updateBasketsHandler = () => {
-        dispatch({ type: actions.UPDATE, payload: basketsForUpdate })
+        sendRequest(
+            Axios.get('https://5bc0c8c284e95e001342c275.mockapi.io/baskets')
+        )
     }
     const clearBasketsHandler = () => {
         dispatch({ type: actions.CLEAR })
