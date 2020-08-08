@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { AxiosResponse } from 'axios'
 import { throttle } from 'throttle-debounce'
 
@@ -10,8 +10,7 @@ function useFetcher<T>(
         success: false,
         finished: false,
     })
-
-    useEffect(() => {
+    const requestThrottle = useCallback(
         throttle(500, async () => {
             const { status, data } = await request
             if (status >= 200 && status < 300) {
@@ -29,7 +28,12 @@ function useFetcher<T>(
                     error: 'error occured',
                 })
             }
-        })
+        }),
+        [request]
+    )
+
+    useEffect(() => {
+        requestThrottle()
     })
 
     return state

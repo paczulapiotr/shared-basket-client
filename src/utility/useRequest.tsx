@@ -15,15 +15,15 @@ function useRequest<T>(): [
     })
 
     const setter = useCallback(
-        () => (request: Promise<AxiosResponse<T>>) => {
+        (request: Promise<AxiosResponse<T>>) => {
             setRequest(request)
             openForRequest.current = true
         },
         [setRequest]
     )
 
-    useEffect(() => {
-        throttle(500, async () => {
+    const requestThrottle = useCallback(() => {
+        ;(async () => {
             if (request == null || !openForRequest.current) {
                 return
             }
@@ -48,7 +48,11 @@ function useRequest<T>(): [
             }
 
             setRequest(undefined)
-        })
+        })()
+    }, [request])
+
+    useEffect(() => {
+        requestThrottle()
     })
 
     return [state, setter]

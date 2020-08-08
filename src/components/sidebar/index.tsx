@@ -5,6 +5,7 @@ import { Button, List } from 'antd'
 import useRequest from 'src/utility/useRequest'
 import './style.scss'
 import Axios from 'axios'
+import useFetcher from 'src/utility/useFetcher'
 interface Props {}
 
 // const basketsForUpdate: SharedBasketModel[] = [
@@ -18,15 +19,16 @@ const SideBar = (props: Props) => {
     )
     const [data, sendRequest] = useRequest<SharedBasketModel[]>()
 
-    useEffect(() => {
-        dispatch({ type: actions.UPDATE, payload: data.data })
-    }, [data])
-
     const updateBasketsHandler = () => {
         sendRequest(
             Axios.get('https://5bc0c8c284e95e001342c275.mockapi.io/baskets')
         )
     }
+
+    useEffect(() => {
+        dispatch({ type: actions.UPDATE, payload: data.data })
+    }, [data])
+
     const clearBasketsHandler = () => {
         dispatch({ type: actions.CLEAR })
     }
