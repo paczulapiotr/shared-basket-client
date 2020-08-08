@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
 import { AxiosResponse } from 'axios'
-import { throttle } from 'throttle-debounce'
 
 function useRequest<T>(): [
     HttpResponseModel<T>,
@@ -22,34 +21,32 @@ function useRequest<T>(): [
         [setRequest]
     )
 
-    const requestThrottle = useCallback(() => {
-        ;(async () => {
-            if (request == null || !openForRequest.current) {
-                return
-            }
+    const requestThrottle = async () => {
+        if (request == null || !openForRequest.current) {
+            return
+        }
 
-            openForRequest.current = false
+        openForRequest.current = false
 
-            const { status, data } = await request
-            if (status >= 200 && status < 300) {
-                setState({
-                    data,
-                    finished: true,
-                    success: true,
-                    error: '',
-                })
-            } else {
-                setState({
-                    data,
-                    finished: true,
-                    success: false,
-                    error: 'error occured',
-                })
-            }
+        const { status, data } = await request
+        if (status >= 200 && status < 300) {
+            setState({
+                data,
+                finished: true,
+                success: true,
+                error: '',
+            })
+        } else {
+            setState({
+                data,
+                finished: true,
+                success: false,
+                error: 'error occured',
+            })
+        }
 
-            setRequest(undefined)
-        })()
-    }, [request])
+        setRequest(undefined)
+    }
 
     useEffect(() => {
         requestThrottle()

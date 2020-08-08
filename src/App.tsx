@@ -1,16 +1,17 @@
-import React from "react";
-import SharedBasketContextProvider from "src/components/contexts/sharedBasketsContext";
-import SideBar from "src/components/sidebar";
-import "src/App.scss";
+import React from 'react'
+import SharedBasketContextProvider from 'src/components/contexts/sharedBasketsContext'
+import MainLayout from 'src/components/mainLayout'
+import 'src/App.scss'
+import 'antd/dist/antd.css'
 
 function App() {
-  return (
-    <div className="App">
-      <SharedBasketContextProvider>
-        <SideBar/>
-      </SharedBasketContextProvider>
-    </div>
-  );
+    return (
+        <div className="App">
+            <SharedBasketContextProvider>
+                <MainLayout />
+            </SharedBasketContextProvider>
+        </div>
+    )
 }
 
-export default App;
+export default App

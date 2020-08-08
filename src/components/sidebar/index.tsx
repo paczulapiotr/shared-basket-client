@@ -1,11 +1,20 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { SharedBasketsContext, actions } from '../contexts/sharedBasketsContext'
-import { Button, List } from 'antd'
-// import useFetcher from 'src/utility/useFetcher'
+import { Layout, Menu } from 'antd'
+import {
+    TeamOutlined,
+    UserOutlined,
+    SyncOutlined,
+    LogoutOutlined,
+    SettingOutlined,
+} from '@ant-design/icons'
 import useRequest from 'src/utility/useRequest'
 import './style.scss'
 import Axios from 'axios'
-import useFetcher from 'src/utility/useFetcher'
+
+const { Sider } = Layout
+const { SubMenu } = Menu
+
 interface Props {}
 
 // const basketsForUpdate: SharedBasketModel[] = [
@@ -13,7 +22,8 @@ interface Props {}
 //     { id: 'bsk_02', name: 'Second basket' },
 // ]
 
-const SideBar = (props: Props) => {
+const AppSidebar = () => {
+    const [isCollapsed, collapse] = useState(false)
     const { baskets, dispatch } = useContext<SharedBasketContext>(
         SharedBasketsContext
     )
@@ -27,34 +37,30 @@ const SideBar = (props: Props) => {
 
     useEffect(() => {
         dispatch({ type: actions.UPDATE, payload: data.data })
-    }, [data])
-
-    const clearBasketsHandler = () => {
-        dispatch({ type: actions.CLEAR })
-    }
+    }, [data, dispatch])
 
     return (
-        <div className="sidebar">
-            <List
-                itemLayout="horizontal"
-                dataSource={baskets}
-                renderItem={(item) => (
-                    <List.Item>
-                        <List.Item.Meta
-                            title={<p>{`ID: ${item.id}`}</p>}
-                            description={`Name: ${item.name}`}
-                        />
-                    </List.Item>
-                )}
-            />
-            <Button type="primary" onClick={updateBasketsHandler}>
-                Update
-            </Button>
-            <Button type="primary" onClick={clearBasketsHandler}>
-                Clear
-            </Button>
-        </div>
+        <Sider collapsible collapsed={isCollapsed} onCollapse={collapse}>
+            <div className="logo" />
+            <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+                <SubMenu key="sub1" icon={<UserOutlined />} title="User">
+                    <Menu.Item icon={<SettingOutlined />}>Profile</Menu.Item>
+                    <Menu.Item icon={<LogoutOutlined />}>Logout</Menu.Item>
+                </SubMenu>
+                <SubMenu key="sub2" icon={<TeamOutlined />} title="Baskets">
+                    {baskets.map((b) => (
+                        <Menu.Item key={b.id}>{b.name}</Menu.Item>
+                    ))}
+                    <Menu.Item
+                        icon={<SyncOutlined />}
+                        onClick={updateBasketsHandler}
+                    >
+                        Refresh
+                    </Menu.Item>
+                </SubMenu>
+            </Menu>
+        </Sider>
     )
 }
 
-export default SideBar
+export default AppSidebar
